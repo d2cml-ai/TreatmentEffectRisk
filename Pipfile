@@ -9,6 +9,7 @@ numpy = "*"
 ipykernel = "*"
 patsy = "*"
 statsmodels = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
