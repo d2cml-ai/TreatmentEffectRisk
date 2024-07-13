@@ -10,6 +10,7 @@ ipykernel = "*"
 patsy = "*"
 statsmodels = "*"
 scikit-learn = "*"
+matplotlib = "*"
 
 [dev-packages]
 
