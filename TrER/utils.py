@@ -1,7 +1,9 @@
 import numpy as np
 
 
-def wtdquantile(Y: np.array, sw: np.array, g):
+def wtdquantile(y: np.array, SW: np.array, g):
+    Y = y.copy()
+    sw = SW.copy()
     if g >= 1:
         return np.max(Y)
     o = np.argsort(Y)
