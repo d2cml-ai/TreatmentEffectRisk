@@ -19,6 +19,38 @@ def plot_cvar(
     xlabel=r"$\alpha$",
     rearrangement=False,
 ):
+    """
+    Plots the Conditional Value at Risk (CVaR) with confidence intervals.
+
+    Parameters:
+    -----------
+    data_ref : DataFrame
+        The DataFrame containing the data to plot.
+    x : str, optional
+        The column name for the x-axis (default is "p").
+    y : str, optional
+        The column name for the y-axis (default is "CVaR").
+    zz : float, optional
+        The z-score multiplier for the confidence interval (default is 1.64485).
+    cvar_se : str, optional
+        The column name for the standard error of CVaR (default is "CVaR_se").
+    alpha : float, optional
+        The transparency level of the confidence interval ribbon (default is 0.5).
+    ylabel : str, optional
+        The label for the y-axis (default is r"${CVaR}_{\alpha}$").
+    xlabel : str, optional
+        The label for the x-axis (default is r"$\alpha$").
+    rearrangement : bool, optional
+        If True, applies rearrangement to the CVaR values (default is False).
+
+    Returns:
+    --------
+    None
+
+    Example:
+    --------
+    >>> plot_cvar(data, x='p', y='CVaR', cvar_se='CVaR_se')
+    """
     # Calculate upper and lower bounds for the ribbon
     data = data_ref.copy()
     if rearrangement:
@@ -56,6 +88,37 @@ def plot_CVAR_TE(
     x_label=r"$\alpha$",
     y_label=r"CVaR",
 ):
+    """
+    Plots the Conditional Value at Risk Treatment Effect (CVaR TE) and confidence intervals.
+
+    Parameters:
+    -----------
+    data : DataFrame
+        The DataFrame containing the input data.
+    ps : array-like
+        Array of probabilities.
+    w_col : str, optional
+        The name of the column in the DataFrame that contains sample weights (default is "sw").
+    y_col : str, optional
+        The name of the column in the DataFrame that contains the outcome values (default is "Y").
+    ipw_col : str, optional
+        The name of the column in the DataFrame that contains inverse probability weights (default is "ipw").
+    A_col : str, optional
+        The name of the column in the DataFrame that contains the treatment indicator (default is "A").
+    x_label : str, optional
+        The label for the x-axis (default is r"$\alpha$").
+    y_label : str, optional
+        The label for the y-axis (default is "CVaR").
+
+    Returns:
+    --------
+    None
+
+    Example:
+    --------
+    >>> ps = np.linspace(0.1, 0.9, 9)
+    >>> plot_CVAR_TE(data, ps, w_col='sw', y_col='Y', ipw_col='ipw', A_col='A')
+    """
     sw_ipw_y = data[w_col] * data[y_col] * data[ipw_col]
     a_d = data[A_col]
 
@@ -150,6 +213,44 @@ def plot_cvar_group(
     colors=None,
     rearrangement=True,
 ):
+    """
+    Plots grouped Conditional Value at Risk (CVaR) with confidence intervals.
+
+    Parameters:
+    -----------
+    data : DataFrame
+        The DataFrame containing the data to plot.
+    x : str, optional
+        The column name for the x-axis (default is "p").
+    y : str, optional
+        The column name for the y-axis (default is "CVaR").
+    x_label : str, optional
+        The label for the x-axis (default is r"$\alpha$").
+    y_label : str, optional
+        The label for the y-axis (default is "CVaR").
+    group : str, optional
+        The column name to group by (default is "b").
+    cvar_se : str, optional
+        The column name for the standard error of CVaR (default is "CVaR_se").
+    zz : float, optional
+        The z-score multiplier for the confidence interval (default is 1.64).
+    sx : float, optional
+        The size of markers in the scatter plot (default is 7).
+    lw : float, optional
+        The linewidth of the line plot (default is 0.5).
+    colors : list of str, optional
+        List of colors for plotting (default is a predefined list of colors).
+    rearrangement : bool, optional
+        If True, applies rearrangement to the CVaR values (default is True).
+
+    Returns:
+    --------
+    None
+
+    Example:
+    --------
+    >>> plot_cvar_group(data, x='p', y='CVaR', group='b')
+    """
 
     if colors is None:
         colors = [
@@ -238,6 +339,50 @@ def plot_cvar_groups_with_markers(
     lw=0.5,
     sort=True,
 ):
+    """
+    Plots grouped Conditional Value at Risk (CVaR) with markers and lines for each subgroup.
+
+    Parameters:
+    -----------
+    df : DataFrame
+        The DataFrame containing the data to plot.
+    x : str, optional
+        The column name for the x-axis (default is "x").
+    y : str, optional
+        The column name for the y-axis (default is "y").
+    cvar_se : str, optional
+        The column name for the standard error of CVaR (default is "CVaR_se").
+    x_label : str, optional
+        The label for the x-axis (default is r"$\alpha$").
+    y_label : str, optional
+        The label for the y-axis (default is r"${CVaR}_{\alpha}-\bar{\tau}$").
+    title_legend : str, optional
+        The title for the legend (default is "Legend").
+    zz : float, optional
+        The z-score multiplier for the confidence interval (default is 1.64).
+    main_group : str, optional
+        The column name to group by for the main groups (default is "b").
+    sub_group_m : str, optional
+        The column name to subgroup within the main group (default is "Type").
+    colors : list of str, optional
+        List of colors for plotting (default is a predefined list of colors).
+    markers : list of str, optional
+        List of markers for plotting (default is a predefined list of markers).
+    sx : float, optional
+        The size of markers in the scatter plot (default is 7).
+    lw : float, optional
+        The linewidth of the line plot (default is 0.5).
+    sort : bool, optional
+        If True, sorts the data before plotting (default is True).
+
+    Returns:
+    --------
+    None
+
+    Example:
+    --------
+    >>> plot_cvar_groups_with_markers(df, x='x', y='y', main_group='b', sub_group_m='Type')
+    """
 
     # Iterar sobre cada valor único de 'b'
     for i, (b_val, group) in enumerate(df.groupby(main_group)):

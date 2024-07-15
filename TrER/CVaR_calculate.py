@@ -16,7 +16,21 @@ def cvar_if(
     Y_col="Y",
     tau="tau",
 ):
-    # Intermediate calculations
+    """
+    Calculate the conditional value at risk and inverse propensity weighting for a given dataset
+    Args:
+       data: pandas DataFrame containing the dataset.
+       p: float, the confidence level for the conditional value at risk.
+       q: float, The confidence level for the inverse propensity weighting.
+       mu1_col: str, The column name for the treatment group mean.
+       mu0_col: str, The column name for the control group mean.
+       A_col: str, The column name for the treatment indicator.
+       ipw_col: str, The column name for the inverse propensity weighting.
+       Y_col: str, The column name for the outcome variable.
+       tau: str, The column name for the treatment effect.
+
+    """
+
     difference = data[mu1_col] - data[mu0_col]
     weighted_difference = (
         (2 * data[A_col] - 1)
@@ -36,6 +50,16 @@ def cvar_if(
 
 
 def cvar_if_plugin(data, p, q, tau="tau"):
+    """
+    Calculate the conditional value at risk for a given tau using plugin estimation
+    Args:
+      data: DataFrame containing the data.
+      p: Probability of the event.
+      q: Quantile value.
+      tau: Column name for the quantile values.
+    Returns:
+     Conditional value at risk for the given tau using plugin estimation.
+    """
     # Intermediate calculations
     tau_values = data[tau]
     condition = tau_values <= q
@@ -49,6 +73,20 @@ def cvar_if_plugin(data, p, q, tau="tau"):
 def cvar_if_tauate(
     data, p, q, mu1="mu1", mu0="mu0", A="A", ipw="ipw", Y="Y", tau="tau"
 ):
+    """
+    Calculate the conditional value at risk for a given tau using inverse propensity weighting
+    Args:
+        data: DataFrame containing the necessary columns.
+        p: The quantile value for which to calculate the CVa.
+        q: The quantile value for which to calculate the CVAR.
+        mu1: The column name for the treatment group mean.
+        mu0: The column name for the control group mean.
+        A: The column name for the treatment indicator.
+        Y: The column name for the outcome variable.
+        tau: The column name for the treatment effect
+    Returns:
+        The conditional value at risk for the given tau using inverse propensity weighting.
+    """
     # Extract columns from DataFrame
     mu1_values = data[mu1]
     mu0_values = data[mu0]
@@ -90,6 +128,24 @@ def cvar_if_bbouns_ate1(
     rho="rho",
     sdprod01="sdprod01",
 ):
+    """
+    Calculate the conditional value at risk (CVa) for a given dataset when bounds are applied and ate.
+    Args:
+        data (pd.DataFrame): The input dataset containing the relevant columns.
+        p (float): The probability parameter.
+        q (float): The quantile parameter.
+        mu1 (str, optional): The column name for the treatment effect parameter mu1. Defaults to "mu1".
+        mu0 (str, optional): The column name for the treatment effect parameter mu0. Defaults to "mu0".
+        A (str, optional): The column name for the treatment indicator. Defaults to "A".
+        ipw (str, optional): The column name for the inverse propensity weight. Defaults to "ipw".
+        Y (str, optional): The column name for the outcome variable. Defaults to "Y".
+        tau (str, optional): The column name for the treatment effect parameter. Defaults to "tau".
+        varsum01(str, optional): The column name for the sum of treatment effects. Defaults to "varsum01".
+        rho (str, optional): The column name for the treatment effect parameter. Defaults to "rho".
+        sd (str, optional): The column name for the standard deviation of treatment effects. Defaults to "sd".
+    Return:
+        np.array: An array containing the treatment effects for each observation.
+    """
     # Extract columns from DataFrame
     mu1_values = data[mu1]
     mu0_values = data[mu0]
@@ -126,6 +182,22 @@ def cvar_if_bbouns_ate1(
 def cvar_bbound_mate(
     data, p, q, b, mu1="mu1", mu0="mu0", A="A", ipw="ipw", Y="Y", tau="tau"
 ):
+    """
+    Calculate the conditional value at risk for bounded treatment effects using a matrix-based approach
+    Args:
+        data (pd.DataFrame): Data containing the necessary columns for calculation
+        p (float): Probability parameter for the bounded treatment effect model
+        q (float): Quantile parameter for the bounded treatment effect model
+        b (float): Bound parameter for the bounded treatment effect model
+        mu1 (str, optional): Column name for the treatment effect parameter mu1. Defaults to "mu1".
+        mu0 (str, optional): Column name for the treatment effect parameter mu0. Defaults to "mu0".
+        A (str, optional): Column name for the treatment indicator variable. Defaults to "A".
+        ipw (str, optional): Column name for the inverse propensity score. Defaults to "ipw".
+        Y (str, optional): Column name for the outcome variable. Defaults to "Y".
+        tau (str, optional): Column name for the treatment effect parameter. Defaults to "tau".
+    Returns:
+       np.array: Estimated treatment effect using the bounded treatment effect model
+    """
     # Extract columns from DataFrame
     mu1_values = data[mu1]
     mu0_values = data[mu0]
@@ -155,6 +227,32 @@ def cvar_bbound_mate(
 
 
 def cvar_calculate(data, p, tau="tau", sw="sw", method_if=cvar_if, b=None):
+    """
+    Calculates the Conditional Value at Risk (CVaR) and its standard error (CVaR_se) for a given dataset.
+
+    Parameters:
+    -----------
+    data : DataFrame
+        The DataFrame containing the input data.
+    p : float
+        The desired percentile for the CVaR calculation.
+    tau : str, optional
+        The name of the column in the DataFrame that contains the tau values (default is "tau").
+    sw : str, optional
+        The name of the column in the DataFrame that contains the weights (default is "sw").
+    method_if : function, optional
+        The function to use for calculating the IF (Influence Function). The default is `cvar_if`.
+    b : float, optional
+        An optional value for the parameter b. If provided, `cvar_bbound_mate` is used instead of `method_if`.
+
+    Returns:
+    --------
+    result : DataFrame
+        A DataFrame with the following columns:
+        - CVaR : The calculated Conditional Value at Risk.
+        - CVaR_se : The standard error of the CVaR.
+        - p : The percentile used for the CVaR calculation
+    """
     # Extract columns from DataFrame
     tau_ref = data[tau]
     sw_ref = data[sw]
@@ -194,6 +292,38 @@ def IF_bbound_mate(
     Y_col="Y",
     tau_col="tau",
 ):
+    """
+    Calculates the Influence Function (IF) with bounded bias for a given dataset.
+
+    Parameters:
+    -----------
+    q : float
+        The quantile value.
+    p : float
+        The desired percentile.
+    b : float
+        The bound for the bias.
+    data : DataFrame
+        The DataFrame containing the input data.
+    mu1_col : str, optional
+        The name of the column in the DataFrame that contains mu1 values (default is "mu1").
+    mu0_col : str, optional
+        The name of the column in the DataFrame that contains mu0 values (default is "mu0").
+    A_col : str, optional
+        The name of the column in the DataFrame that contains A values (default is "A").
+    ipw_col : str, optional
+        The name of the column in the DataFrame that contains inverse probability weights (default is "ipw").
+    Y_col : str, optional
+        The name of the column in the DataFrame that contains outcome values (default is "Y").
+    tau_col : str, optional
+        The name of the column in the DataFrame that contains tau values (default is "tau").
+
+    Returns:
+    --------
+    result : Series
+        A Series containing the calculated Influence Function values for each row in the DataFrame.
+    """
+
     mu1 = data[mu1_col]
     mu0 = data[mu0_col]
     A = data[A_col]
@@ -215,7 +345,37 @@ def IF_bbound_mate(
     return result
 
 
-def cvar_bbound_mate(data, ps, bs, tau_col="tau", sw_col="sw", sort_cvar=True):
+def cvar_bbound_mate(
+    data, ps: np.array, bs: np.array, tau_col="tau", sw_col="sw", sort_cvar=True
+):
+    """
+    Calculates the Conditional Value at Risk (CVaR) with bounded bias for given datasets and parameters.
+
+    Parameters:
+    -----------
+    data : DataFrame
+        The DataFrame containing the input data.
+    ps : np.array
+        An array of percentiles for which to calculate the CVaR.
+    bs : np.array
+        An array of bias bounds.
+    tau_col : str, optional
+        The name of the column in the DataFrame that contains tau values (default is "tau").
+    sw_col : str, optional
+        The name of the column in the DataFrame that contains weight values (default is "sw").
+    sort_cvar : bool, optional
+        If True, sorts the CVaR values within each bias bound (default is True).
+
+    Returns:
+    --------
+    results : DataFrame
+        A DataFrame with the following columns:
+        - CVaR : The calculated Conditional Value at Risk.
+        - CVaR_se : The standard error of the CVaR.
+        - p : The percentile used for the CVaR calculation.
+        - b : The bias bound.
+
+    """
     tau = data[tau_col]
     sw = data[sw_col]
 
@@ -258,7 +418,43 @@ def IF_cvar_bbouns_ate(
     varsum01_col="varsum01",
     sdprod01_col="sdprod01",
 ):
-    # Extraer columnas del DataFrame
+    """
+    Calculates the Influence Function (IF) for CVaR with bounded bias and average treatment effect (ATE) for a given dataset.
+
+    Parameters:
+    -----------
+    data : DataFrame
+        The DataFrame containing the input data.
+    p : float
+        The desired percentile.
+    q : float
+        The quantile value.
+    rho : float
+        The correlation coefficient.
+    mu1_col : str, optional
+        The name of the column in the DataFrame that contains mu1 values (default is "mu1").
+    mu0_col : str, optional
+        The name of the column in the DataFrame that contains mu0 values (default is "mu0").
+    A_col : str, optional
+        The name of the column in the DataFrame that contains A values (default is "A").
+    ipw_col : str, optional
+        The name of the column in the DataFrame that contains inverse probability weights (default is "ipw").
+    Y_col : str, optional
+        The name of the column in the DataFrame that contains outcome values (default is "Y").
+    tau_col : str, optional
+        The name of the column in the DataFrame that contains tau values (default is "tau").
+    varsum01_col : str, optional
+        The name of the column in the DataFrame that contains the sum of variances (default is "varsum01").
+    sdprod01_col : str, optional
+        The name of the column in the DataFrame that contains the product of standard deviations (default is "sdprod01").
+
+    Returns:
+    --------
+    result : Series
+        A Series containing the calculated Influence Function values for each row in the DataFrame.
+
+    """
+
     mu1 = data[mu1_col]
     mu0 = data[mu0_col]
     A = data[A_col]
@@ -268,12 +464,9 @@ def IF_cvar_bbouns_ate(
     varsum01 = data[varsum01_col]
     sdprod01 = data[sdprod01_col]
 
-    # Cálculos intermedios
-
     weighted_difference = (2 * A - 1) * ipw * (Y - A * mu1 - (1 - A) * mu0)
     sqrt_term = np.sqrt((tau - q) ** 2 + varsum01 - 2 * rho * sdprod01)
 
-    # Cálculo final
     term1 = -weighted_difference
     term2 = (tau - q - sqrt_term) / (2 * p)
     term3 = (1 - (tau - q) / sqrt_term) * weighted_difference / (2 * p)
@@ -281,60 +474,3 @@ def IF_cvar_bbouns_ate(
     result = term1 + q + term2 + term3
     # if
     return result
-
-
-class CVaR:
-    def __init__(
-        self,
-        ps: np.array,
-        tau_col: str = "tau",
-        mu1_col: str = "mu1",
-        mu0_col: str = "mu0",
-        A_col: str = "A",
-        ipw_col: str = "ipw",
-        Y_col: str = "Y",
-        sw_col: str = "sw",
-        bbound_varsum01: str = "varsum01",
-        bbound_rho: str = "rho",
-        bbound_sdprod01: str = "sdprod01",
-        data: pd.DataFrame = None,
-        **kwargs
-    ) -> None:
-        cols = [tau_col, mu1_col, mu0_col, A_col, ipw_col, Y_col, sw_col]
-        cols_bound = [bbound_varsum01, bbound_rho, bbound_sdprod01]
-
-        if data is not None:
-            data = data[cols].to_numpy()
-            # data_bbound = data[cols_bound].to_numpy()
-            tau, mu1, mu0, A, ipw, Y, sw = [data[:, i] for i in range(len(cols))]
-            # varsum01, rho, sdprod01 = [
-            #     data_bbound[:, i] for i in range(len(cols_bound))
-            # ]
-            ref_IF = IF(tau, mu1, mu0, A, ipw, Y)
-            qs = [wtdquantile(Y, sw, p) for p in ps]
-        else:
-            ref_IF = IF(**kwargs)
-            sw = kwargs["sw"]
-            qs = [wtdquantile(kwargs["Y"], kwargs["sw"], p) for p in ps]
-
-        print(qs)
-
-        self.ref_IF = ref_IF
-        self.sw = sw
-        self.qs = qs
-
-        IF_base = [ref_IF.base(p, q) for p, q in zip(ps, qs)]
-        IF_plugin = [ref_IF.plugin(p, q) for p, q in zip(ps, qs)]
-        IF_tau_ate = [ref_IF.tau_ate(p, q) for p, q in zip(ps, qs)]
-
-        self.CVaR_base = [
-            self.summary_cvar(IF_base_i, p) for IF_base_i, p in zip(IF_base, ps)
-        ]
-        # self.CVaR_plugin = self.summary_cvar(IF_plugin)
-        # self.CVaR_tau_ate = self.summary_cvar(IF_tau_ate)
-
-    def summary_cvar(self, IF_result: np.array, p):
-        cvar = IF_result * self.sw
-        cvar_mean = np.nanmean(cvar)
-        cvar_std = np.nanstd(cvar) / np.sqrt(len(IF_result))
-        return cvar_mean, cvar_std, p
