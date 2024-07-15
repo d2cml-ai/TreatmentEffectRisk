@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from utils import rearrange_cvar
+from .utils import rearrange_cvar
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 import numpy as np, pandas as pd

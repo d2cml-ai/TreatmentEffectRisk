@@ -1,6 +1,6 @@
 import numpy as np, pandas as pd
-from utils import wtdquantile, rearrange_cvar, goldsectmax
-from IF_calculate import IF
+from .utils import wtdquantile, rearrange_cvar, goldsectmax
+from .IF_calculate import IF
 
 import pandas as pd
 

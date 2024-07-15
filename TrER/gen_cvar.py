@@ -1,12 +1,12 @@
 import pandas as pd, numpy as np
-from CVaR_calculate import (
+from .CVaR_calculate import (
     IF_bbound_mate,
     IF_cvar_bbouns_ate,
     cvar_calculate,
     cvar_if_plugin,
     cvar_if_tauate,
 )
-from utils import goldsectmax, rearrange_cvar, wtdquantile
+from .utils import goldsectmax, rearrange_cvar, wtdquantile
 
 
 def cvar_tau(data, ps, tau_col="tau"):

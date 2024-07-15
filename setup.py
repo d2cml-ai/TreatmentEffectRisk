@@ -1,11 +1,12 @@
 from setuptools import setup, find_packages
+from version import __version__ as v_
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
     name="TrER",
-    version="0.1.1",
+    version=v_,
     author="Jhon Flores Rojas",
     author_email="fr.jhonk@gmail.com",
     description="implementation of the Treatment Effect Risk: Bounds and Inference package, based on the replication by Kallus (2024).",
