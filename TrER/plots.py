@@ -6,6 +6,30 @@ import numpy as np, pandas as pd
 
 # markers = ["o", "^", "s", "d", "p"]  # Se asocia a cada Type
 # colors = ["blue", "green", "red", "purple", "orange"]  # Se asocia a cada b
+ggplot_c = ["#00BA38", "#F8766D", "#619CFF"]
+
+def_ggplot_c = [
+    "#F8766D",
+    "#EA8331",
+    "#D89000",
+    "#C09B00",
+    "#A3A500",
+    "#7CAE00",
+    "#39B600",
+    "#00BB4E",
+    "#00BF7D",
+    "#00C1A3",
+    "#00BFC4",
+    "#00BAE0",
+    "#00B0F6",
+    "#35A2FF",
+    "#9590FF",
+    "#C77CFF",
+    "#E76BF3",
+    "#FA62DB",
+    "#FF62BC",
+    "#FF6A98",
+]
 
 
 def plot_cvar(
@@ -87,6 +111,7 @@ def plot_CVAR_TE(
     A_col="A",
     x_label=r"$\alpha$",
     y_label=r"CVaR",
+    # color
 ):
     """
     Plots the Conditional Value at Risk Treatment Effect (CVaR TE) and confidence intervals.
@@ -179,7 +204,7 @@ def plot_CVAR_TE(
     fig, ax = plt.subplots()
 
     groups = combined_data["Group"].unique()
-    colors = {"A=1": "blue", "A=0": "red", "diff": "green"}
+    colors = {"A=1": ggplot_c[0], "A=0": ggplot_c[1], "diff": ggplot_c[2]}
 
     for group in groups:
         group_data = combined_data[combined_data["Group"] == group]
@@ -253,23 +278,9 @@ def plot_cvar_group(
     """
 
     if colors is None:
-        colors = [
-            "b",
-            "g",
-            "r",
-            "c",
-            "m",
-            "y",
-            "k",
-            "#FF5733",
-            "#33FF57",
-            "#5733FF",
-            "#33FFFF",
-            "#FF33FF",
-            "#FFFF33",
-            "#333333",
-        ]
+        colors = def_ggplot_c
 
+    data[group] = np.round(data[group], 2)
     for i, (g, group_df) in enumerate(data.groupby(group)):
         if rearrangement:
             group_df = group_df.sort_values(x)
@@ -317,23 +328,7 @@ def plot_cvar_groups_with_markers(
     zz=1.64,
     main_group="b",
     sub_group_m="Type",
-    colors=[
-        "b",
-        "g",
-        "r",
-        "c",
-        "m",
-        "y",
-        "k",
-        # "w",
-        "#FF5733",
-        "#33FF57",
-        "#5733FF",
-        "#33FFFF",
-        "#FF33FF",
-        "#FFFF33",
-        "#333333",
-    ],
+    colors=def_ggplot_c,
     markers=[".", ",", "o", "v", "^", "<", ">", "1", "2", "3", "4", "s", "p", "*", "h"],
     sx=7,
     lw=0.5,
