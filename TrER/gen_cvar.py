@@ -54,7 +54,7 @@ def cvar_bbound_mate(data, ps, bs, tau_col="tau", sw_col="sw", sort_cvar=True):
                 result["b"] = [b]
 
             results = pd.concat((results, result))
-    # results = results.round(2)
+    results["b"] = np.round(results["b"])
     if sort_cvar:
         n_results = results.copy()
         n_results["CVaR"] = n_results.groupby("b")["CVaR"].transform(rearrange_cvar)
@@ -74,7 +74,7 @@ def cvar_bbounded(cvar_mate, cvar_bbound_mate, bs):
         temp_df["type"] = "Thm. 3.3"
         c3_temp.append(temp_df)
     c3 = pd.concat(c3_temp, ignore_index=True).query("b > 0")
-
+    c3["b"] = np.round(c3["b"])
     df_bounded = pd.concat((c1, c2, c3))
     df_bounded["Type"] = df_bounded["type"]
     for i_group, (btype, group) in enumerate(df_bounded.groupby(["b", "type"])):
