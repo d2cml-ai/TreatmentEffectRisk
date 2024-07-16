@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - notebooks
+      - udpates
 
 jobs:
   deploy:
