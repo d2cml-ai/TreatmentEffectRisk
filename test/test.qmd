@@ -40,5 +40,5 @@ warnings.filterwarnings("ignore")
 ```
 
 ```{python}
-url_csv.head()
+pd.DataFrame(url_csv).head()
 ```
