@@ -30,10 +30,9 @@ jobs:
           python-version: "3.10"
           cache: "pip"
       - run: sleep 30
+      - run: pip uninstall TrER
       - name: Install Dependencies
-        run:
-          - pip uninstall TrER
-          - pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Generar quarto doc
         run: quarto render README.qmd
