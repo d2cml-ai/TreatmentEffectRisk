@@ -5,6 +5,7 @@ on:
     branches:
       - notebooks
       - udpates
+      - test
 
 jobs:
   deploy:

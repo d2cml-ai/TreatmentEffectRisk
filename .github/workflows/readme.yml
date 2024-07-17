@@ -1,17 +1,19 @@
 name: Actualizar Readme
 
 on:
-  # workflow_run:
-  #   workflows: ["Upload Python Package"]
-  #   types:
-  #     - completed
+  workflow_run:
+    workflows: ["Upload Python Package"]
+    types:
+      - completed
   push:
-    branches: test
+    branches:
+      - test
+      - updates
     # - cron: "40 15 * * 1,3,5"
 
 jobs:
   CreateQuarto:
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -31,7 +33,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Generar quarto doc
-        run: quarto render test/test.qmd
+        run: quarto render README.qmd
 
       - id: commit
         name: Commit files
@@ -40,7 +42,7 @@ jobs:
           git pull
           git config --local user.email "actions@github.com"
           git add -A
-          git commit -m "update files"
+          git commit -m "Update Readme"
           git push origin test
         env:
           REPO_KEY: ${{ secrets.GITHUB_TOKEN }}
