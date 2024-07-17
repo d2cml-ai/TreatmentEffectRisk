@@ -1,12 +1,17 @@
 name: Actualizar Readme
 
 on:
+  # workflow_run:
+  #   workflows: ["Upload Python Package"]
+  #   types:
+  #     - completed
   push:
     branches: test
     # - cron: "40 15 * * 1,3,5"
 
 jobs:
   CreateQuarto:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
