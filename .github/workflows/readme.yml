@@ -29,10 +29,10 @@ jobs:
         with:
           python-version: "3.10"
           cache: "pip"
+      - run: sleep 30
       - name: Install Dependencies
         run:
           - pip uninstall TrER
-          - sleep 30
           - pip install -r requirements.txt
 
       - name: Generar quarto doc
