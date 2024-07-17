@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from .utils import rearrange_cvar
+from .utils_plots import ggColorSlice
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 import numpy as np, pandas as pd
@@ -277,8 +278,10 @@ def plot_cvar_group(
     >>> plot_cvar_group(data, x='p', y='CVaR', group='b')
     """
 
+    n_colors = len(data[group].unique())
+
     if colors is None:
-        colors = def_ggplot_c
+        colors = ggColorSlice(n_colors)
 
     data[group] = np.round(data[group], 2)
     for i, (g, group_df) in enumerate(data.groupby(group)):
@@ -328,8 +331,8 @@ def plot_cvar_groups_with_markers(
     zz=1.64,
     main_group="b",
     sub_group_m="Type",
-    colors=def_ggplot_c,
-    markers=[".", ",", "o", "v", "^", "<", ">", "1", "2", "3", "4", "s", "p", "*", "h"],
+    colors=None,
+    markers=["o", "^", "s", "+", "<", ">", "1", "2", "3", "4", "s", "p", "*", "h"],
     sx=7,
     lw=0.5,
     sort=True,
@@ -378,6 +381,11 @@ def plot_cvar_groups_with_markers(
     --------
     >>> plot_cvar_groups_with_markers(df, x='x', y='y', main_group='b', sub_group_m='Type')
     """
+
+    n_colors = len(df[main_group].unique())
+
+    if colors is None:
+        colors = ggColorSlice(n_colors)
 
     # Iterar sobre cada valor único de 'b'
     for i, (b_val, group) in enumerate(df.groupby(main_group)):

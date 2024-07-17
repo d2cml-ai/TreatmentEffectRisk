@@ -6,6 +6,7 @@ on:
       - notebooks
       - udpates
       - test
+      - package
 
 jobs:
   deploy:
@@ -19,6 +20,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.x"
+          cache: "pip"
 
       - name: Install twine
         run: pip install setuptools wheel twine
