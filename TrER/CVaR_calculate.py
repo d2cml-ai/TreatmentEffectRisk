@@ -331,16 +331,30 @@ def IF_bbound_mate(
     Y = data[Y_col]
     tau = data[tau_col]
 
-    weighted_difference = (2 * A - 1) * ipw * (Y - A * mu1 - (1 - A) * mu0)
-    mu = mu1 - mu0
-    condition = tau - b <= q
+    # weighted_difference = (2 * A - 1) * ipw * (Y - A * mu1 - (1 - A) * mu0)
+    # mu = mu1 - mu0
+    # condition = tau - b <= q
 
-    result = (
-        -(mu + weighted_difference)
-        + q
-        + (mu + weighted_difference - q - b) * condition / (2 * p)
-        + (mu + weighted_difference - q + b) * condition / (2 * p)
-    )
+    # result = (
+    #     -(mu + weighted_difference)
+    #     + q
+    #     + (mu + weighted_difference - q - b) * condition / (2 * p)
+    #     + (mu + weighted_difference - q + b) * condition / (2 * p)
+    # )
+    term1 = mu1 - mu0
+    term2 = (2 * A - 1) * ipw * (Y - A * mu1 - (1 - A) * mu0)
+    expression = term1 + term2
+
+    # Calcular el indicador booleano
+    indicator1 = tau - b <= q
+    indicator2 = tau + b <= q
+
+    # Calcular los términos finales
+    term3 = (expression - q - b) * indicator1 / 2 / p
+    term4 = (expression - q + b) * indicator2 / 2 / p
+
+    # Calcular el valor final de IF
+    result = -expression + q + term3 + term4
 
     return result
 

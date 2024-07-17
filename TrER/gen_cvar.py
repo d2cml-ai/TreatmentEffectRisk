@@ -48,7 +48,9 @@ def cvar_bbound_mate(data, ps, bs, tau_col="tau", sw_col="sw", sort_cvar=True):
             cvar = IF * sw
             CVaR = np.nanmean(cvar)
             CVaR_se = np.nanstd(cvar) / np.sqrt(len(sw))
-            result = pd.DataFrame({"CVaR": [CVaR], "CVaR_se": [CVaR_se], "p": [p]})
+            result = pd.DataFrame(
+                {"CVaR": [CVaR], "CVaR_se": [CVaR_se], "p": [p], "q": [q]}
+            )
 
             if b is not None:
                 result["b"] = [b]
