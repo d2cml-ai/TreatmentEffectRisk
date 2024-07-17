@@ -16,7 +16,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Chequear el código
+      - name: Chequear el  código
         uses: actions/checkout@v4
 
       - name: Set up Quarto
