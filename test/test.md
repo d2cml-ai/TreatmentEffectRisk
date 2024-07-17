@@ -25,7 +25,7 @@ for details.
 For questions or inquiries about the package, please contact
 \[fr.jhonk@gmail.com\].
 
-# Usage
+# Usage1
 
 ``` python
 # pip install TrER==0.1.41
