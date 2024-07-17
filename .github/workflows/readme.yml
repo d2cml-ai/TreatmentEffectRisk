@@ -39,7 +39,7 @@ jobs:
         run: quarto render README.qmd
 
       - id: commit
-        name: Commit files
+        name: Commit  files
         run: |
           git config --local user.name "action-user"
           git pull
